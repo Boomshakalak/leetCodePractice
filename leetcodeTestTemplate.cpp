@@ -8,37 +8,25 @@
 using namespace std;
 class Solution {
 public:
-    long long myAtoi(string str) {
-        if (!str.size()) return 0;
-        long long res = 0;
-        int start = 0;
-        int flag = 1;
-        stringstream ss;
-        ss<<str;
-        ss>>str;
-        if (str[0]=='-' || str[0] == '+') {
-        	start = start+1;
-        	flag = str[0]=='+'?1:-1;
+    int maxArea(vector<int>& height) {
+        int res = 0;
+        int cur = 0;
+        int p1 = 0;
+        int p2 = height.size()-1;
+        for (; p1 < p2; ){
+            cur = min(height[p1],height[p2])*(p2-p1);
+            if (res<cur) res = cur;
+            if (height[p1]<height[p2]) p1++;
+            else p2--;
         }
-
-        for (int i = start;i<str.size();i++){
-        	if (str[i]<'0' || str[i]>'9') break;
-        	res=res*10+int(str[i]-'0');
-        	if (res > INT_MAX || res < INT_MIN) break;
-        }
-        res = res*flag;
-        if (res > INT_MAX) return INT_MAX;
-        if (res < INT_MIN) return INT_MIN;
         return res;
     }
 };
 int main(int argc, char const *argv[])
 {
 	Solution p;
-	string st;
-	while (cin>>st){
-		cout<<p.myAtoi(st)<<endl;
-	}
-	
+	vector<int> vi={5,7,9,3,12,77,36};
+	int k= p.maxArea(vi);
+    cout<<k<<endl;
 	return 0;
 }
