@@ -1,11 +1,15 @@
-#include <string>
 #include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
 using namespace std;
-class Solution {
-public:
-    string countAndSay(int n) {
-    if (n == 0) return "";
+
+
+
+int main(int argc, char const *argv[]){
+    int n;
     string res = "1";
+    std::cin >> n;
     while (--n) {
         string cur = "";
         for (int i = 0; i < res.size(); i++) {
@@ -18,6 +22,6 @@ public:
         }
         res = cur;
     }
-    return res;
+    cout<<s<<endl;
+    return 0;
 }
-};

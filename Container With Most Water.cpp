@@ -9,7 +9,7 @@ public:
             cur = min(height[p1],height[p2])*(p2-p1);
             if (res<cur) res = cur;
 			height[p1]<height[p2]? p1++:p2--;
-        }          
+        }
         return res;
     }
 };
