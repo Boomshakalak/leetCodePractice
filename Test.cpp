@@ -3,25 +3,31 @@
 #include <string>
 #include <vector>
 using namespace std;
-
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        sort(g.begin(),g.end());
+        sort(s.begin(),s.end());
+        int count =0;
+        int j = 0 ;
+        cout<<"call function"<<endl;
+        for (int i = 0 ; (i < g.size()) && (j < s.size()); ++i){
+            while (g[i] > s[j] && j < s.size() ){
+                j++;
+                cout<<j<<"$$"<<endl;
+            }
+            // if (j = s.size()) break;
+            if (g[i] <= s[j]){
+                cout<<"here!"<<endl;
+                count++;
+                j++;
+            }
+        }
+        return count;
+    }
 
 
 int main(int argc, char const *argv[]){
-    int n;
-    string res = "1";
-    std::cin >> n;
-    while (--n) {
-        string cur = "";
-        for (int i = 0; i < res.size(); i++) {
-            int count = 1;
-             while ((i + 1 < res.size()) && (res[i] == res[i + 1])){
-                count++;
-                i++;
-            }
-            cur += to_string(count) + res[i];
-        }
-        res = cur;
-    }
-    cout<<s<<endl;
+    vector<int> v1 = {1,1,2,};
+    vector<int> v2 = {2,3};
+    cout<<findContentChildren(v1,v2)<<endl;
     return 0;
 }
