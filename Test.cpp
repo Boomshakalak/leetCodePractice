@@ -6,8 +6,8 @@
 using namespace std;
 
 int main(int argc, char const *argv[]){
-    int c = '(';
-    cout<<c<<endl;
+    int c = '0';
+    cout<<isalpha(c)<<endl;
     return 0;
 
 }
