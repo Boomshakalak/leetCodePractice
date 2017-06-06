@@ -6,27 +6,45 @@
 #include <sstream>
 #include <climits>
 using namespace std;
-class Solution {
+class NumMatrix {
 public:
-    int maxArea(vector<int>& height) {
-        int res = 0;
-        int cur = 0;
-        int p1 = 0;
-        int p2 = height.size()-1;
-        for (; p1 < p2; ){
-            cur = min(height[p1],height[p2])*(p2-p1);
-            if (res<cur) res = cur;
-            if (height[p1]<height[p2]) p1++;
-            else p2--;
+    NumMatrix(vector<vector<int>> matrix) {
+        if (matrix.empty()) return;
+        int m = matrix.size();
+        int n = matrix[0].size();
+        res = matrix;
+        for (int i = 1 ; i < m; i++){
+            int tmp = 0;
+            for (int j = 0 ; j < n; j++){
+                tmp += matrix[i][j];
+                res[i][j] = res[i-1][j]+tmp;
+            }
         }
-        return res;
     }
+
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        return res[row2][col2]-(row1==0?0:res[row1-1][col2])-(col1==0?0:res[row2][col1-1]);
+
+    }
+    void printres(){
+        for (auto x:res){
+            for (auto t : x)cout<<t<<" ** ";
+            cout<<endl;
+        }
+    }
+private:
+    vector<vector<int>> res;
 };
+
+/**
+ * Your NumMatrix object will be instantiated and called as such:
+ * NumMatrix obj = new NumMatrix(matrix);
+ * int param_1 = obj.sumRegion(row1,col1,row2,col2);
+ */
 int main(int argc, char const *argv[])
 {
-	Solution p;
-	vector<int> vi={5,7,9,3,12,77,36};
-	int k= p.maxArea(vi);
-    cout<<k<<endl;
+    vector<vector<int>> matrix = {{0,1,2},{3,4,5},{6,7,8}};
+	NumMatrix p = NumMatrix(matrix);
+	p.printres();
 	return 0;
 }
