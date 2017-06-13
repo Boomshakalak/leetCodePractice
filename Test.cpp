@@ -5,47 +5,41 @@
 #include <vector>
 #include <sstream>
 #include <climits>
+#include <string>
 using namespace std;
-class NumMatrix {
-public:
-    NumMatrix(vector<vector<int>> matrix) {
-        if (matrix.empty()) return;
-        int m = matrix.size();
-        int n = matrix[0].size();
-        res = matrix;
-        for (int i = 0 ; i < m; i++){
-            int tmp = 0;
-            for (int j = 0 ; j < n; j++){
-                tmp += matrix[i][j];
-                res[i][j] = (i==0?0:res[i-1][j])+tmp;
-            }
-        }
-    }
-
-    int sumRegion(int row1, int col1, int row2, int col2) {
-        return res[row2][col2]-(row1==0?0:res[row1-1][col2])-(col1==0?0:res[row2][col1-1])+((row1==0 || row2==0)?0:res[row1-1][row2-1]);
-
-    }
-    void printres(){
-        for (auto x:res){
-            for (auto t : x)cout<<t<<" ** ";
-            cout<<endl;
-        }
-    }
-private:
-    vector<vector<int>> res;
-};
-
-/**
- * Your NumMatrix object will be instantiated and called as such:
- * NumMatrix obj = new NumMatrix(matrix);
- * int param_1 = obj.sumRegion(row1,col1,row2,col2);
- */
+string to_string(int a){
+    stringstream ss;
+    ss << a;
+    return ss.str();
+}
+struct TreeNode {
+        int val;
+        TreeNode *left;
+        TreeNode *right;
+        TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ };
+ int remove(string & s){
+     int flag = 0;
+     for (int i = 0 ; i < s.size()-1;++i){
+         if (s[i] == '(' && s[i+1] == ')'){
+             flag = 1;
+             s.erase(i,2);
+             break;
+         }
+     }
+     return flag;
+ }
+string trans(TreeNode* t){
+    if (!t) return "()";
+    return to_string(t->val)+'('+trans(t->left)+trans(t->right)+')';
+}
 int main(int argc, char const *argv[])
 {
-    vector<vector<int>> matrix = {{3,0,1,4,2},{5,6,3,2,1},{1,2,0,1,5},{4,1,0,1,7},{1,0,3,0,5}};
-    NumMatrix p = NumMatrix(matrix);
-    p.printres();
-    cout<<p.sumRegion(2,1,4,3)<<endl;
-    return 0;
+    TreeNode * head = new TreeNode(0);
+    head->left = new TreeNode(1);
+    head->right = new TreeNode(2);
+    string tmp = trans(head);
+    string test = "asdfasdg";
+    while(remove(tmp));
+    cout<<tmp<<endl;
 }
