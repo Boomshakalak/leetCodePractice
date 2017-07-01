@@ -1,29 +1,16 @@
-#include<bits\stdc++.h>
-using namespace std;
-string to_string(int a){
-    stringstream ss;
-    ss<<a;
-    return ss.str();
-}
-void print2d(vector<vector<int>>& v){
-    for (auto x:v){
-        for (auto t : x)cout<<t<<"#";
-        cout<<endl;
-    }
-}
-struct myHash
-{
-    size_t operator()(pair<int, int> val) const
-    {
-        string s = to_string(val.first)+","+to_string(val.second);
-        hash<string> hf;
-        return hf(s);
-    }
-};
 class Solution {
 public:
-
+    struct myHash
+    {
+        size_t operator()(pair<int, int> val) const
+        {
+            string s = to_string(val.first)+","+to_string(val.second);
+            hash<string> hf;
+            return hf(s);
+        }
+    };
     int longestIncreasingPath(vector<vector<int>>& matrix) {
+        if (!matrix.size()) return 0;
 		vector<vector<unordered_set<pair<int,int>,myHash>>> graph = getGraph(matrix);
         vector<vector<int>> degree = indegree(graph);
         return getLength(degree,graph);
@@ -54,6 +41,7 @@ public:
         int n = graph[0].size();
         vector<int> k(n,0);
         vector<vector<int>> res(m,k);
+        for (auto x : res) x = k;
         for (int i = 0; i < m ; i++){
             for (int j = 0; j < n; j++){
                 for (auto x : graph[i][j]){
@@ -69,13 +57,11 @@ public:
         int n = graph[0].size();
         vector<int> k(n,1);
         vector<vector<int>> res(m,k);
-        int count = 0;
-        while (++count){
+        while (1){
             int i;
             int j;
             bool find = false;
             for (i = 0; i < m ; i++){
-                cout<<"i:"<<i<<endl;
                 for (j = 0; j < n &&!find ; j++){
                     if (!indegree[i][j]) {
                         find = true;
@@ -84,28 +70,15 @@ public:
                 }
                 if (find) break;
             }
-            if ( i == m && j == n) {cout<<"possible problem"<<endl;return maxlen;}
+            if ( i == m && j == n) return maxlen;
             indegree[i][j] = -1;
             for (auto x : graph[i][j]){
                  res[x.first][x.second] = max(res[x.first][x.second],res[i][j]+1);
                  maxlen = max(maxlen,res[x.first][x.second]);
                  indegree[x.first][x.second]--;
             }
-            cout<<"$"<<count<<endl;
-            print2d(indegree);
         }
         return maxlen;
     }
 
 };
-
-int main()
-{
-    vector<vector<int>> matrix = {{7,8,9},{9,7,6},{7,2,3}};
-    Solution p;
-    vector<vector<unordered_set<pair<int,int>,myHash>>> graph = p.getGraph(matrix);
-    vector<vector<int>> v = p.indegree(graph);
-    print2d(v);
-    cout<<p.getLength(v,graph)<<endl;
-    return 0;
-}

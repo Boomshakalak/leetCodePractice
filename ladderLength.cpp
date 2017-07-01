@@ -14,7 +14,7 @@ public:
             for (int j = 0 ; j < l; j++){
                 string t = qs.front();
                 qs.pop();
-                auto itr = wordSet.begin();
+                auto itr = wordSet.begin();   // something need to know
                 while(itr!=wordSet.end()){
                     string s = *itr;
                     if (isNeighbor(t,s)){
