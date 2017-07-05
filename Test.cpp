@@ -1,111 +1,144 @@
 #include<bits\stdc++.h>
 using namespace std;
-string to_string(int a){
-    stringstream ss;
-    ss<<a;
-    return ss.str();
-}
-void print2d(vector<vector<int>>& v){
-    for (auto x:v){
-        for (auto t : x)cout<<t<<"#";
-        cout<<endl;
-    }
-}
-struct myHash
-{
-    size_t operator()(pair<int, int> val) const
-    {
-        string s = to_string(val.first)+","+to_string(val.second);
-        hash<string> hf;
-        return hf(s);
-    }
-};
+// class Solution {
+// public:
+//     vector<vector<string>> findLadders(string start, string end, vector<string> wordList) {
+//         unordered_set<string> dict;
+//         for (auto x : wordList)dict.insert(x);
+//         if (!dict.count(end)) return vector<vector<string>>();
+//         unordered_set<string> head={start}, tail={end};
+//         vector<vector<string>> ans;
+//         unordered_map<string, vector<string>> next;
+//         bool head_start = true;
+//         while (!head.empty() && !tail.empty()) {
+//             for (auto word:head) dict.erase(word);
+//             for (auto word:tail) dict.erase(word);
+//             if (head.size() > tail.size()) {
+//                 swap(head, tail);
+//                 head_start = !head_start;
+//             }
+//             unordered_set<string> temp_head;
+//             bool stop = false;
+//             for (auto word:head) {
+//                 string original_word = word;
+//                 for (int i=0; i<word.length(); i++) {
+//                     char temp = word[i];
+//                     for (char ch='a'; ch<='z'; ch++) {
+//                         if (ch == temp) continue;
+//                         word[i] = ch;
+//                         if (tail.find(word) != tail.end()) {
+//                             stop = true;
+//                             if (head_start)
+//                                 next[original_word].push_back(word);
+//                             else
+//                                 next[word].push_back(original_word);
+//                         }
+//                         if (!stop && dict.find(word) != dict.end()) {
+//                             temp_head.insert(word);
+//                             if (head_start)
+//                                 next[original_word].push_back(word);
+//                             else
+//                                 next[word].push_back(original_word);
+//                         }
+//                     }
+//                     word = original_word;
+//                 }
+//             }
+//             if (stop) break;
+//             head = temp_head;
+//         }
+//         vector<string> v={start};
+//         for (auto x : next){
+//             cout<<x.first<<":"<<endl;
+//             for (auto t : x.second)cout<<t<<endl;
+//         }
+//         dfs(ans, v, next, start, end);
+//         return ans;
+//     }
+//
+//     void dfs(vector<vector<string>> &ans, vector<string> &v, unordered_map<string, vector<string>> &next, string s, string t) {
+//         if (s == t) {
+//             ans.push_back(v);
+//         }
+//         for (auto word:next[s]) {
+//             v.push_back(word);
+//             dfs(ans, v, next, word, t);
+//             v.pop_back();
+//         }
+//     }
+// };
 class Solution {
 public:
-
-    int longestIncreasingPath(vector<vector<int>>& matrix) {
-		vector<vector<unordered_set<pair<int,int>,myHash>>> graph = getGraph(matrix);
-        vector<vector<int>> degree = indegree(graph);
-        return getLength(degree,graph);
+vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+    vector<vector<string>> res;
+    vector<string> tmp;
+    unordered_set<string> head,tail;
+    unordered_set<string> dic;
+    unordered_map<string,vector<string>> next;
+    bool search4ward = true;
+    for (auto x:wordList)dic.insert(x);
+    dic.erase(beginWord);
+    if (!dic.count(endWord)) return res;
+    head.insert(beginWord);
+    tail.insert(endWord);
+    get(next,head,tail,dic,search4ward);
+    for (auto x: next){
+        cout<<x.first<<":"<<endl;
+        for (auto t: x.second)cout<<t<<endl;
     }
-    vector<vector<unordered_set<pair<int,int>,myHash>>> getGraph(vector<vector<int>>& matrix){
-        int m =matrix.size();
-        int n = matrix[0].size();
-        vector<unordered_set<pair<int,int>,myHash>> k(n);
-        vector<vector<unordered_set<pair<int,int>,myHash>>> res(m,k);
-        vector<pair<int,int>> dir = {{0,1},{0,-1},{1,0},{-1,0}};
-        for (int i = 0 ; i < m ; i++){
-            for (int j = 0 ; j < n; j++){
-                for (auto x : dir){
-                    int nx = i+x.first;
-                    int ny = j+x.second;
-                    if (nx >= 0 && nx < m && ny >= 0 && ny < n){
-                        if (matrix[i][j] < matrix[nx][ny]){
-                            res[i][j].insert(make_pair(nx,ny));
-                        }
-                    }
+    tmp.push_back(beginWord);
+    getPath(res,tmp,next,beginWord,endWord);
+    return res;
+}
+void get(unordered_map<string,vector<string>>& next, unordered_set<string>& head, unordered_set<string>& tail,unordered_set<string>& dic, bool search4ward){
+    if (head.size()> tail.size()) return get(next,tail,head,dic,!search4ward);
+    if (!head.size()) return;
+    bool done = false;
+    unordered_set<string> immediate;
+    for (auto x: head) dic.erase(x);
+    for (auto word: head){
+        int l = word.size();
+        string temp = word;
+        for (int i = 0; i < l ; i++){
+            temp = word;
+            for (int j = 0 ; j < 26;j++){
+                temp[i]='a'+j;
+                cout<<"**"<<temp<<endl;
+                if (tail.count(temp)){
+                    search4ward?next[word].push_back(temp):next[temp].push_back(word);
+                    done = true;
+                }
+                else if (dic.count(temp)){
+                    immediate.insert(temp);
+                    search4ward?next[word].push_back(temp):next[temp].push_back(word);
                 }
             }
         }
-        return res;
     }
-    vector<vector<int>> indegree(vector<vector<unordered_set<pair<int,int>,myHash>>>& graph){
-        int m = graph.size();
-        int n = graph[0].size();
-        vector<int> k(n,0);
-        vector<vector<int>> res(m,k);
-        for (int i = 0; i < m ; i++){
-            for (int j = 0; j < n; j++){
-                for (auto x : graph[i][j]){
-                    res[x.first][x.second]++;
-                }
-            }
+if (!done) return get(next,immediate,tail,dic,search4ward);
+}
+void getPath(vector<vector<string>>& res,vector<string>& tmp, unordered_map<string,vector<string>>& next, string cur,string endWord){
+    if (cur == endWord)res.push_back(tmp);
+    else{
+        for (auto x : next[cur]){
+            tmp.push_back(x);
+            getPath(res,tmp,next,x,endWord);
+            tmp.pop_back();
         }
-        return res;
     }
-    int getLength(vector<vector<int>>& indegree,vector<vector<unordered_set<pair<int,int>,myHash>>>& graph){
-        int maxlen = 1;
-        int m = graph.size();
-        int n = graph[0].size();
-        vector<int> k(n,1);
-        vector<vector<int>> res(m,k);
-        int count = 0;
-        while (++count){
-            int i;
-            int j;
-            bool find = false;
-            for (i = 0; i < m ; i++){
-                cout<<"i:"<<i<<endl;
-                for (j = 0; j < n &&!find ; j++){
-                    if (!indegree[i][j]) {
-                        find = true;
-                        break;
-                    }
-                }
-                if (find) break;
-            }
-            if ( i == m && j == n) {cout<<"possible problem"<<endl;return maxlen;}
-            indegree[i][j] = -1;
-            for (auto x : graph[i][j]){
-                 res[x.first][x.second] = max(res[x.first][x.second],res[i][j]+1);
-                 maxlen = max(maxlen,res[x.first][x.second]);
-                 indegree[x.first][x.second]--;
-            }
-            cout<<"$"<<count<<endl;
-            print2d(indegree);
-        }
-        return maxlen;
-    }
-
+}
 };
-
 int main()
 {
-    vector<vector<int>> matrix = {{7,8,9},{9,7,6},{7,2,3}};
     Solution p;
-    vector<vector<unordered_set<pair<int,int>,myHash>>> graph = p.getGraph(matrix);
-    vector<vector<int>> v = p.indegree(graph);
-    print2d(v);
-    cout<<p.getLength(v,graph)<<endl;
+    vector<string> wordList = {"hot","dot","dog","lot","log","cog"};
+    vector<vector<string>> res = p.findLadders("hit","cog",wordList);
+    for (auto x: res){
+        for (int i = 0 ; i < x.size();i++){
+            if (i) cout<<"->";
+            cout<<x[i];
+        }
+        cout<<endl;
+    }
     return 0;
 }
