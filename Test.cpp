@@ -4,28 +4,24 @@
 #include <algorithm>
 #include <queue>
 #include <bitset>
+#include <string>
 #include <climits>
 using namespace std;
-int c(int m, int n){
-    int k = m;
-    long long n1 = 1;
-    int count =n;
-    while(count--){
-        n1 = n1*k;
-        k--;
+string add(string n, string m){
+    string res;
+    int i=n.size()-1, j=m.size()-1, carry=0;
+    while(i>=0 || j>=0){
+        int sum=carry+(i>=0 ? (n[i--]-'0') : 0) + (j>=0?  (m[j--]-'0') : 0);
+        res.push_back(sum%10+'0');
+        carry=sum/10;
     }
-    long long n2 = 1;
-    int i = 1;
-    while(i <n){
-        i++;
-        n2 = n2*i;
-    }
-    if (!n2) return 1;
-    return (n1/n2);
+    if(carry) res.push_back(carry+'0');
+    reverse(res.begin(), res.end());
+    return res;
 }
-
 int main(int argc, char const *argv[]) {
-    int k = INT_MAX;
-    cout<<bitset<64>(k).count()<<endl;
+    string a = "123";
+    string b = "535";
+    cout<<add(a,b)<<endl;
     return 0;
 }
