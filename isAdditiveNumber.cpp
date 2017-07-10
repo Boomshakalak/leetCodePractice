@@ -1,3 +1,4 @@
+// AdditiveNumber is to say to be for a sequence of any combinations, the preceding 2 numbers can add up to the 3rd one.
 class Solution {
 public:
         bool isAdditiveNumber(string num) {
