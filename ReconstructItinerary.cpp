@@ -18,7 +18,7 @@ vector<string> route;
 void visit(string airport) {
     while (targets[airport].size()) {
         string next = *targets[airport].begin();
-        targets[airport].erase(targets[airport].begin());
+        targets[airport].erase(targets[airport].begin());   // In multiset , erase operation on a value will remove all elements with that value, be careful with that!!
         visit(next);
     }
     route.push_back(airport);
