@@ -31,7 +31,6 @@ public:
             if ( i == word.size()) cur->end = true;
         }
     }
-
     /** Returns if the word is in the trie. */
     bool search(string word) {
         int i = 0;
