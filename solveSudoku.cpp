@@ -18,7 +18,7 @@ bool solveSudoku(vector<vector<char>>& b, int i, int j) {
                 blo[i / 3 * 3 + j / 3] ^= 1 << ch;
             }
         }
-        return false;  
+        return false;
     } else
           return solveSudoku(b, i, j+1);
 }

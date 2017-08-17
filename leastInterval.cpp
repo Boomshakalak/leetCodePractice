@@ -20,3 +20,20 @@ public:
         return res;
     }
 };
+
+
+class Solution {
+public:
+
+    int leastInterval(vector<char>& tasks, int n) {
+        int map[26]={0};
+        for (auto x:tasks)map[x-'A']++;
+        sort(map,map+26);
+        int max_v = map[25] - 1;
+        int is = max_v * n;
+        for (int i = 24 ; i>= 0 && map[i];i-- ){
+            is -= min(map[i],max_v);
+        }
+        return is>0?is+tasks.size():tasks.size();
+    }
+};

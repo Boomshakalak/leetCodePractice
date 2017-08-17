@@ -26,7 +26,6 @@ class Solution {
 public:
     int rob(TreeNode* root) {
         vector<int> res = helper(root);
-
         return max(res[0], res[1]);
     }
 };
